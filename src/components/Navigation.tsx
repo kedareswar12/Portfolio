@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Link, useLocation } from 'react-router-dom';
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const location = useLocation();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -16,45 +18,38 @@ const Navigation = () => {
   }, []);
 
   const navItems = [
-    { label: 'Home', href: '#home' },
-    { label: 'Projects', href: '#projects' },
-    { label: 'Journey', href: '#journey' },
-    { label: 'Contact', href: '#contact' }
+    { label: 'Home', href: '/' },
+    { label: 'About', href: '/about' },
+    { label: 'Projects', href: '/projects' },
+    { label: 'Certifications', href: '/certifications' },
+    { label: 'Contact', href: '/contact' }
   ];
 
   return (
     <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-      scrolled ? 'glass backdrop-blur-lg' : 'bg-transparent'
+      scrolled ? 'clean-card backdrop-blur-lg' : 'bg-transparent'
     }`}>
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
-          {/* Logo */}
-          <a href="#home" className="text-2xl font-bold gradient-text hover:scale-105 transition-transform duration-300">
-            Alex.dev
-          </a>
+          <Link to="/" className="text-2xl font-bold gradient-text-clean hover:scale-105 transition-transform duration-300">
+            Kedareswar
+          </Link>
 
-          {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
             {navItems.map((item) => (
-              <a
+              <Link
                 key={item.label}
-                href={item.href}
-                className="text-foreground hover:text-neon-cyan transition-colors duration-300 relative group"
+                to={item.href}
+                className={`transition-colors duration-300 relative group ${
+                  location.pathname === item.href ? 'accent-blue' : 'text-foreground hover:accent-blue'
+                }`}
               >
                 {item.label}
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-neon-cyan transition-all duration-300 group-hover:w-full"></span>
-              </a>
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
+              </Link>
             ))}
-            <Button 
-              variant="outline" 
-              size="sm"
-              className="border-neon-purple text-neon-purple hover:bg-neon-purple hover:text-background transition-all duration-300"
-            >
-              Resume
-            </Button>
           </div>
 
-          {/* Mobile Menu Button */}
           <Button
             variant="ghost"
             size="sm"
@@ -65,29 +60,19 @@ const Navigation = () => {
           </Button>
         </div>
 
-        {/* Mobile Navigation */}
         {isOpen && (
-          <div className="md:hidden glass-card mt-2 py-4 animate-fade-scale">
+          <div className="md:hidden clean-card mt-2 py-4 fade-in">
             <div className="flex flex-col space-y-4">
               {navItems.map((item) => (
-                <a
+                <Link
                   key={item.label}
-                  href={item.href}
-                  className="text-foreground hover:text-neon-cyan transition-colors duration-300 px-4"
+                  to={item.href}
+                  className="text-foreground hover:accent-blue transition-colors duration-300 px-4"
                   onClick={() => setIsOpen(false)}
                 >
                   {item.label}
-                </a>
+                </Link>
               ))}
-              <div className="px-4 pt-2">
-                <Button 
-                  variant="outline" 
-                  size="sm"
-                  className="w-full border-neon-purple text-neon-purple hover:bg-neon-purple hover:text-background transition-all duration-300"
-                >
-                  Resume
-                </Button>
-              </div>
             </div>
           </div>
         )}
